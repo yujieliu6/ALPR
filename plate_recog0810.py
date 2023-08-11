@@ -135,7 +135,7 @@ class CapturePlate_CharacterSegmentation():
     cv.rectangle(image2_with_box, (x1-3, y1-10), (x2+3, y2+10), (0, 255, 0), 2)
     plt.imshow(image2_with_box)
     plt.axis('off')
-    plt.savefig("/home/pi/Desktop/liu/yujie/ALPR/imgs/1plate_processing.jpg", bbox_inches='tight')
+    plt.savefig("ALPR/imgs/1plate_processing.jpg", bbox_inches='tight')
     #plt.show()
 
     return rect0, snapshot
@@ -195,7 +195,7 @@ class CapturePlate_CharacterSegmentation():
         plt.subplot(10, 1, 9)
         plt.title('5_Dilate', fontsize=9)
         plt.imshow(image)
-        plt.savefig("/home/pi/Desktop/liu/yujie/ALPR/imgs/3segment_characters1.jpg", bbox_inches='tight')
+        plt.savefig("ALPR/imgs/3segment_characters1.jpg", bbox_inches='tight')
         #plt.show()
         # Find contours
         _,contours, hierarchy = cv.findContours(image, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
@@ -225,7 +225,7 @@ class CapturePlate_CharacterSegmentation():
                 #splite_imagee = cv.cvtColor(splite_image, cv.COLOR_BGR2GRAY)
                 splite_image = cv.resize(splite_image, (32, 40))
                 chara_images.append(splite_image)
-        save_folder = '/home/pi/Desktop/liu/yujie/ALPR/imgs/characters'
+        save_folder = 'ALPR/imgs/characters'
         # Clear folder
         if os.path.exists(save_folder):
             for file_name in os.listdir(save_folder):
@@ -241,7 +241,7 @@ class CapturePlate_CharacterSegmentation():
             _, chara_images[i] = cv.threshold(chara_images[i], 0, 255, cv.THRESH_BINARY_INV | cv.THRESH_OTSU)
             chara_images[i] = cv.bitwise_not(chara_images[i])
             cv.imwrite(image_path, chara_images[i])
-        plt.savefig("/home/pi/Desktop/liu/yujie/ALPR/imgs/4segment_characters2.jpg", bbox_inches='tight')
+        plt.savefig("ALPR/imgs/4segment_characters2.jpg", bbox_inches='tight')
         #plt.show()
 width0 = 32
 height0 = 40
@@ -292,7 +292,7 @@ def license_plate_recognition():
         sess.run(init)
         # Load the saved model
         saver = tf.train.Saver()
-        saver.restore(sess, "/home/pi/Desktop/liu/yujie/ALPR/save_model/letter_digits_model.ckpt")
+        saver.restore(sess, "ALPR/save_model/letter_digits_model.ckpt")
         # 验证模型的权重和偏置
         # print("第1层卷积层_权重：", sess.run(W_con1), "偏置：", sess.run(b_con1))
         # print("第2层卷积层_权重：", sess.run(W_con2), "偏置：", sess.run(b_con2))
@@ -300,12 +300,12 @@ def license_plate_recognition():
         # print("第2个全连接层权重：", sess.run(W_fc2), "偏置：", sess.run(b_fc2))
 
         licence_num = ""  # Used to concatenate the license plate numbers
-        files = os.listdir("/home/pi/Desktop/liu/yujie/ALPR/imgs/characters")  # Path to the folder containing test images
+        files = os.listdir("ALPR/imgs/characters")  # Path to the folder containing test images
         num_png = len(files)
         first_recognition = True
         matched_characters_with_prob = []
         for i in range(num_png):
-            path = "/home/pi/Desktop/liu/yujie/ALPR/imgs/characters/char_%d.jpg" % i  # Path to individual test image
+            path = "ALPR/imgs/characters/char_%d.jpg" % i  # Path to individual test image
             img = Image.open(path)
 
             width = img.size[0]
@@ -379,17 +379,17 @@ def process_and_recognize_license_plate(image_path):
     plt.subplot(1, 2, 2)
     plt.title('2_Split license plate', fontsize=9)
     plt.imshow(plate1)
-    plt.savefig("/home/pi/Desktop/liu/yujie/ALPR/imgs/2segment_plate.jpg", bbox_inches='tight')
+    plt.savefig("ALPR/imgs/2segment_plate.jpg", bbox_inches='tight')
     #plt.show()
 
     # Specify the save directory
-    save_directory = r'/home/pi/Desktop/liu/yujie/ALPR/imgs/plate'
+    save_directory = r'ALPR/imgs/plate'
     # Save the image to the specified directory
     save_path = os.path.join(save_directory, 'plate.jpg')
     cv.imwrite(save_path, plate1)
 
 
-    path = "/home/pi/Desktop/liu/yujie/ALPR/imgs/plate/plate.jpg"
+    path = "ALPR/imgs/plate/plate.jpg"
     #sub_plate = sub_plate0()
     #sub_plate.segment_and_save_characters(path)  # 把图片的路径给它
     license.segment_and_save_characters(path)
@@ -420,7 +420,7 @@ def process_and_recognize_license_plate(image_path):
         num_matching_characters=0
     return num_matching_characters
 if __name__ == '__main__':
-    image_path ='/home/pi/Desktop/liu/yujie/ALPR/imgs/car/1.jpg'
+    image_path ='ALPR/imgs/car/1.jpg'
     #image_path = 'D:/lunwen/CarIdRecognition/imgs/car/car/6.jpg'
     #process_and_recognize_license_plate(image_path)
     print("Num_matching:",process_and_recognize_license_plate(image_path))
