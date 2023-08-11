@@ -112,7 +112,7 @@ def prepare_image_data():
                             else:
                                 val_images[index][w + h * width] = 1
                         except TypeError:
-                            pass  # 跳过错误，继续执行后续代码
+                            pass  
                 val_labels[index][i] = 1
                 index += 1
     return input_images, input_labels, input_count, val_images, val_labels, val_count
@@ -122,7 +122,7 @@ def prepare_image_data():
 class_accuracy_rates = [[] for _ in range(classes0)]
 training_iterations = []
 accuracy_rates = []
-# 新增：定义变量保存最高准确率和对应的训练次数
+
 best_accuracy = 0.0
 best_accuracy_iteration = -1
 saver = tf.train.Saver()
@@ -174,7 +174,7 @@ with tf.Session() as sess:
     # save model
     saver.save(sess, "./save_model/letter_digits_model.ckpt")
 
-# 打印最高准确率和对应的训练次数
+
 print("Best Accuracy: %0.5f%%" % (best_accuracy * 100))
 print("Achieved in Training Iteration: %d" % best_accuracy_iteration)
 # Calculate average accuracy
