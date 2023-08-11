@@ -20,7 +20,7 @@ GPIO.setup(IN_s90_pin, GPIO.OUT)
 s90_pwm = GPIO.PWM(IN_s90_pin, 50)  # Frequency set to 50 Hz
 s90_pwm.start(0)
 
-def s90(angle):   # 定义函数，输入角度，即可自动转向，0-180度，如0、90、180
+def s90(angle):   # 0、90、180
     s90_pwm.ChangeDutyCycle(2.5+angle/360*20)
 
 
@@ -93,7 +93,7 @@ def process_out_sensor_distance_blink():
     turn_off_green_led()  # Turn off the green LED
     turn_on_red_led()  # Turn on the red LED
 
-license_plate_processed=False
+#license_plate_processed=False
 while True:
     out_distance = get_distance(OUT_trigger_pin, OUT_echo_pin)
     in_distance = get_distance(IN_trigger_pin, IN_echo_pin)
@@ -112,33 +112,21 @@ while True:
     if out_distance > 30 and in_distance < 30:
         turn_on_green_led()
         process_out_sensor_distance_blink()
-        # 打开摄像头并拍照
+       
         with picamera.PiCamera() as camera:
-           camera.start_preview()  # 打开预览
-           time.sleep(1)  # 等待摄像头稳定
-           camera.capture('/home/pi/Desktop/liu/yujie/ALPR/imgs/car/image.jpg')  # 保存照片到指定路径
-           camera.stop_preview()  # 关闭预览
-           image_path ='/home/pi/Desktop/liu/yujie/ALPR/imgs/car/image.jpg'
-           #image_path ='/home/pi/Desktop/liu/yujie/ALPR/imgs/car/1.jpg'
-           # 调用函数并传入图像路径
-           if not license_plate_processed:
-              Num_matching=process_and_recognize_license_plate(image_path)
-              print("Num_matching:",Num_matching)
+           camera.start_preview()  
+           time.sleep(1)  
+           camera.capture('/ALPR/imgs/car/image.jpg')  
+           camera.stop_preview()  
+           image_path ='ALPR/imgs/car/image.jpg'
+           #image_path ='/ALPR/imgs/car/1.jpg'
+          
+           Num_matching=process_and_recognize_license_plate(image_path)
+           print("Num_matching:",Num_matching)
               if Num_matching>=4:
                   s90(90)
                   #license_plate_processed=True
-                  blink_flag=False
-              #else:
-                 #camera.start_preview()  # 打开预览
-                 #time.sleep(2)  # 等待摄像头稳定
-                 #camera.capture('/home/pi/Desktop/liu/yujie/ALPR/imgs/car/image.jpg')  # 保存照片到指定路径
-                 #camera.stop_preview()  # 关闭预览
-                 #Num_matching=process_and_recognize_license_plate(image_path)
-                 #license_plate_processed=True
-                 #blink_flag=False
-                 #if Num_matching>=4:
-                  # s90(90)
-                                     
+                  blink_flag=False                        
     time.sleep(0.1)
 
 GPIO.cleanup()
