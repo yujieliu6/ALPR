@@ -275,15 +275,15 @@ def license_plate_recognition():
     ch_con1 = tf.nn.max_pool(jh_con1, ksize=[1, 1, 1, 1], strides=[1, 1, 1, 1], padding="SAME")
 
     h_fc0_flat = tf.reshape(ch_con1, [-1, 16 * 20 * 32])
-    W_fc0 = tf.Variable(tf.random_normal([16 * 20 * 32, 512], stddev=0.1), name="W_fc1")  # 权重
-    b_fc0 = tf.Variable(tf.constant(0.1, shape=[512]), name="b_fc1")  # 生成偏置 512个0.1
+    W_fc0 = tf.Variable(tf.random_normal([16 * 20 * 32, 512], stddev=0.1), name="W_fc1")  
+    b_fc0 = tf.Variable(tf.constant(0.1, shape=[512]), name="b_fc1")  
     h_fc0 = tf.nn.relu(tf.matmul(h_fc0_flat, W_fc0) + b_fc0)
 
     rate = tf.placeholder(tf.float32)
     h_fc0_drop = tf.nn.dropout(h_fc0, rate)
 
-    W_fc1 = tf.Variable(tf.random_normal([512, classes0], stddev=0.1), name="W_fc2")  # 权重
-    b_fc1 = tf.Variable(tf.constant(0.1, shape=[classes0]), name="b_fc2")  # 生成偏置
+    W_fc1 = tf.Variable(tf.random_normal([512, classes0], stddev=0.1), name="W_fc2") 
+    b_fc1 = tf.Variable(tf.constant(0.1, shape=[classes0]), name="b_fc2") 
     y_con = tf.matmul(h_fc0_drop, W_fc1) + b_fc1
 
     init = tf.global_variables_initializer()
@@ -293,12 +293,6 @@ def license_plate_recognition():
         # Load the saved model
         saver = tf.train.Saver()
         saver.restore(sess, "./save_model/letter_digits_model.ckpt")
-        # 验证模型的权重和偏置
-        # print("第1层卷积层_权重：", sess.run(W_con1), "偏置：", sess.run(b_con1))
-        # print("第2层卷积层_权重：", sess.run(W_con2), "偏置：", sess.run(b_con2))
-        # print("第1个全连接层权重：", sess.run(W_fc1), "偏置：", sess.run(b_fc1))
-        # print("第2个全连接层权重：", sess.run(W_fc2), "偏置：", sess.run(b_fc2))
-
         licence_num = ""  # Used to concatenate the license plate numbers
         files = os.listdir("D:/lunwen/CarIdRecognition/imgs/characters")  # Path to the folder containing test images
         num_png = len(files)
@@ -329,10 +323,10 @@ def license_plate_recognition():
                     max_prob = result[0][j]
                     max_index = j
 
-            # 保存匹配的字符及概率到列表
+            # Save matching characters and probabilities to the list
             matched_characters_with_prob.append((characters0[max_index], max_prob))
 
-            if first_recognition:  # 第一次识别进行特殊处理
+            if first_recognition:  # First identification for special treatment
                 if max_index < 34:
                     licence_num = "*"
                 else:
@@ -360,7 +354,7 @@ def process_and_recognize_license_plate(image_path):
     y1 = max(0, int(rect[1]) - 0)
     y2 = min(image1.shape[0] - 1, int(rect[3]) + 5)
     x1, y1, x2, y2 = int(rect[0]), int(rect[1]), int(rect[2]), int(rect[3])
-    # 背景去除
+    # background removing
     plate1 = license.grabcut_segmentation(image1, rect)
     plt.figure("Plate Segmentation")  # Create a new figure
     plt.suptitle('Plate Segmentation')
@@ -369,7 +363,7 @@ def process_and_recognize_license_plate(image_path):
     plt.title('1_Grabcut_segmentation', fontsize=9)
     plt.imshow(plate1)
     #print('background removal:', x1, y1, x2, y2)
-    # 把车牌从背景中切割出来
+    #Cut the license plate out of the background
     plate1 = plate1[y1-10:y2+10, x1-3:x2+3]
     height, width = plate1.shape[:2]
     plate1 = cv.resize(plate1, (2 * width, 2 * height), interpolation=cv.INTER_CUBIC)
