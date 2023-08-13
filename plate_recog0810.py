@@ -382,7 +382,7 @@ def process_and_recognize_license_plate(image_path):
 
     path = "D:/lunwen/CarIdRecognition/imgs/plate/plate.jpg"
     #sub_plate = sub_plate0()
-    #sub_plate.segment_and_save_characters(path)  # 把图片的路径给它
+    #sub_plate.segment_and_save_characters(path)  
     license.segment_and_save_characters(path)
 
     #from loadCNN0714 import license_plate_recognition
